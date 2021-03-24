@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+import { ObjectId } from "mongodb";
 import { connectDatabase } from "../src/database";
 import { Listing } from "../src/lib/types";
 
@@ -9,7 +10,7 @@ const seed = async () => {
     const db = await connectDatabase();
     const listings: Listing[] = [
       {
-        _id: "001",
+        _id: new ObjectId(),
         title: "Clean and fully furnished apartment. 5 min away from CN Tower",
         image: "https://media.publit.io/file/toronto-listing-1_exv0tf.jpg",
         address: "3210 Scotchmere Dr W, Toronto, ON, CA",
@@ -20,7 +21,7 @@ const seed = async () => {
         rating: 5,
       },
       {
-        _id: "002",
+        _id: new ObjectId(),
         title: "Luxurious home with private pool",
         image: "https://media.publit.io/file/los-angeles-listing-1_aikhx7.jpg",
         address: "100 Hollywood Hills Dr, Los Angeles, California",
@@ -31,7 +32,7 @@ const seed = async () => {
         rating: 4,
       },
       {
-        _id: "003",
+        _id: new ObjectId(),
         title: "Single bedroom located in the heart of downtown San Fransisco",
         image:
           "https://media.publit.io/file/san-fransisco-listing-1_qzntl4.jpg",
@@ -43,6 +44,12 @@ const seed = async () => {
         rating: 3,
       },
     ];
+
+    for (const listing of listings) {
+      await db.listings.insertOne(listing);
+    }
+
+    console.log("[seed] : success");
   } catch {
     throw new Error("failed to seed database");
   }
